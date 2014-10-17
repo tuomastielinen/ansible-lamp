@@ -6,9 +6,10 @@
   with_items:
     - mysql-server
     - python-mysqldb
+    - mysql-client
 
 - name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/my.cnf
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
   notify: 
   - restart mysql
 
@@ -17,6 +18,7 @@
 
 - name: Create Application Database
   mysql_db: name={{ dbname }} state=present
+  sudo: yes
 
 - name: Create Application DB User
   mysql_user: name={{ dbuser }} password={{ upassword }} priv=*.*:ALL host='%' state=present

@@ -1,5 +1,5 @@
 mysqlservice: mysqld
 mysql_port: 3306
-dbuser: root
+dbuser: dbuser
 dbname: testdb 
-upassword: rootpass
+upassword: dbpass
