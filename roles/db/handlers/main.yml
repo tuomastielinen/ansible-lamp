@@ -1,5 +1,6 @@
 ---
 # Handler to handle DB tier notifications
 
-- name: restart mysql
+- name: mysql-restart
   service: name=mysql state=restarted
+  sudo: yes

@@ -1,6 +1,1 @@
 ---
-mysqlservice: mysqld
-mysql_port: 3306
-dbuser: dbuser
-dbname: testdb 
-upassword: dbpass

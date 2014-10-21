@@ -4,21 +4,28 @@
 - name: Install Mysql package
   apt: name={{ item }} state=installed
   with_items:
-    - mysql-server
     - python-mysqldb
+    - mysql-server
+    - mysql-common
     - mysql-client
-
-- name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf
-  notify: 
-  - restart mysql
-
-- name: Start Mysql Service
-  service: name=mysql state=started enabled=true
-
-- name: Create Application Database
-  mysql_db: name={{ dbname }} state=present
   sudo: yes
 
-- name: Create Application DB User
-  mysql_user: name={{ dbuser }} password={{ upassword }} priv=*.*:ALL host='%' state=present
+- name: Change root user password
+  mysql_user:
+    login_user=root
+    login_password=
+    name=root
+    password=
+    priv=*.*:ALL,GRANT
+    host={{ item }}
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  ignore_errors: true
+
+- name: Create Mysql configuration file
+  template: src=my.cnf.j2 dest=/etc/mysql/conf.d/my.cnf
+  notify: 
+  - mysql-restart
