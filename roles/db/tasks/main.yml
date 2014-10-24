@@ -1,31 +1,27 @@
 ---
-# This playbook will install mysql and create db user and give permissions.
+# This playbook will install mariadb and create db user and give permissions.
 
-- name: Install Mysql package
+- name: Install Mariadb package
   apt: name={{ item }} state=installed
   with_items:
     - python-mysqldb
-    - mysql-server
-    - mysql-common
-    - mysql-client
-  sudo: yes
+    - mariadb-server
+    - mariadb-client
 
 - name: Change root user password
   mysql_user:
-    login_user=root
-    login_password=
-    name=root
-    password=
+    user=root
+    password=rootpass
     priv=*.*:ALL,GRANT
+    state=present
     host={{ item }}
   with_items:
     - "{{ ansible_hostname }}"
     - 127.0.0.1
     - ::1
     - localhost
-  ignore_errors: true
 
-- name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/mysql/conf.d/my.cnf
-  notify: 
-  - mysql-restart
+- name: Create Mariadb configuration file
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf mode=0644
+  notify:
+  - mariadb-restart
