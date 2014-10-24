@@ -10,6 +10,8 @@
 
 - name: Change root user password
   mysql_user:
+    login_user=root
+    login_password=
     user=root
     password=rootpass
     priv=*.*:ALL,GRANT
@@ -20,8 +22,10 @@
     - 127.0.0.1
     - ::1
     - localhost
+  ignore_errors: yes
 
 - name: Create Mariadb configuration file
-  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf mode=0644
-  notify:
-  - mariadb-restart
+  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+
+- name: Create Application DB User
+  mysql_user: name=appuser password=apppass priv=*.*:ALL host='%' state=present
