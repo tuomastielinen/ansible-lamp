@@ -1,12 +1,12 @@
 ansible-lamp
 ============
 
-Ansible config for lamp-stack
+Ansible playbook for Ubuntu 14.04 lamp-stack
 
 Tested with Vagrant.
 
-Deploy with
+Deploy with:
 
 ```
-ansible-playbook -i hosts site.yml --ask-sudo-pass
+ansible-playbook -i hosts site.yml -s
 ```
