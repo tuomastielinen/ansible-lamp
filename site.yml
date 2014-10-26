@@ -16,3 +16,9 @@
 
   roles:
     - db
+
+- name: install and configure development machine
+  hosts: localhost
+  connection: local
+  roles: 
+    - devmachine
