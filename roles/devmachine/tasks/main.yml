@@ -2,7 +2,7 @@
 # Installs GUI and other stuff for web development
 
 - name: Install base items
-  apt: name={{ item }} state=installed
+  apt: name={{ item }} update_cache=yes 
   with_items:
     - software-properties-common
     - vim 
@@ -17,7 +17,7 @@
   apt: name=ubuntu-desktop install_recommends=no state=installed
 
 - name: add ST3 repo
-  apt_repository: 
+  apt_repository: > 
     repo='ppa:webupd8team/sublime-text-3'
     state=present
 
@@ -28,7 +28,7 @@
   apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
 
 - name: Add chrome repo
-  apt_repository: 
+  apt_repository: > 
     repo='deb http://dl.google.com/linux/chrome/deb/ stable main'
     state=present
 
@@ -39,16 +39,16 @@
   apt: name=language-pack-fi state=installed
 
 - name: Create locale file
-  file: src=locale dest=/etc/default/locale 
+  copy: src=locale dest=/etc/default/locale 
 
 - name: Create keyboard file
-  file: src=keyboard dest=/etc/default/keyboard
+  copy: src=keyboard dest=/etc/default/keyboard
 
 - name: trigger keyboard settings 1
   command: udevadm trigger --subsystem-match=input --action=change
 
 - name: Create timezone file
-  file: src=timezone dest=/etc/timezone
+  copy: src=timezone dest=/etc/timezone
 
 - name: trigger timezone settings
   command: dpkg-reconfigure --frontend noninteractive tzdata
@@ -57,23 +57,23 @@
   service: name=cron state=restarted
 
 - name: add php repo
-  apt_repository:
-    repo='ppa:ondrej/php5'
+  apt_repository: >
+    repo='ppa:ondrej/php5-5.6'
     state=present
 
 - name: add git repo
-  apt_repository:
+  apt_repository: >
     repo='ppa:pdoes/ppa'
     state=present
 
 - name: install latest nodejs 1
-  shell: curl -sL https://deb.nodesource.com/setup | sudo bash -
+  shell: 'curl -sL https://deb.nodesource.com/setup | sudo bash -'
 
 - name: install latest nodejs 2
-  command: apt-get install -y nodejs
+  command: 'apt-get install -y nodejs'
 
 - name: install common items
-  apt: name={{ item }} state=installed
+  apt: name={{ item }} update_cache=yes
   with_items:
     - git 
     - php5 
@@ -90,34 +90,33 @@
   get_url: url=https://phar.phpunit.de/phpunit.phar dest=/usr/local/bin/phpunit mode=0770
 
 - name: install memcached
-  apt: name={{ item }} state=installed
+  apt: name={{ item }} update_cache=yes
   with_items:
     - memcached
     - php5-memcached
 
 - name: crete xdebug config
-  file: src=xdebug.ini dest=/etc/php5/mods-available/xdebug.ini
+  copy: src=xdebug.ini dest=/etc/php5/mods-available/xdebug.ini
 
 - name: enable mod_rewrite
   apache2_module: state=present name=rewrite
 
 - name: create vhost config
-  copy: src=/home/vagrant/ansible-lamp/roles/devmachine/files/devsite.conf dest=/etc/apache2/sites-available/devsite.conf
+  copy: src=devsite.conf dest=/etc/apache2/sites-available/devsite.conf
 
 - name: use development php.ini
-  command: cp /usr/share/php5/php.ini-development /etc/php5/apache2/php.ini
+  file: src=/usr/share/php5/php.ini-development dest=/etc/php5/apache2/php.ini
 
 - name: restart apache
   service: name=apache2 state=restarted
 
-- name: install composer 1
-  command: curl -sS https://getcomposer.org/installer
-
-- name: install composer 2
-  command: mv composer.phar /usr/local/bin/composer
+- name: install composer 
+  shell: >
+    curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+    chdir=/tmp
 
 - name: install bash-git-prompt
-  git: 
+  git: > 
     repo=https://github.com/magicmonty/bash-git-prompt.git 
     dest=/home/vagrant/.bash-git-prompt
 
