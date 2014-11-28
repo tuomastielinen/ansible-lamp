@@ -1,5 +1,0 @@
----
-# Handler to handle DB tier notifications
-
-- name: mariadb-restart
-  service: name=mysql state=restarted

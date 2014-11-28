@@ -1,5 +1,0 @@
----
-root_password: rootpass
-app_username: appuser
-app_password: 1234
-db_name: appdb
