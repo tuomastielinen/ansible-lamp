@@ -1,12 +1,12 @@
 ansible-lamp
 ============
 
-Ansible playbook for Ubuntu 14.04 lamp-stack
+Ansible playbook for local Laravel and web development
 
 Tested with Vagrant.
 
 Deploy with:
 
 ```
-ansible-playbook -i hosts site.yml -s
+ansible-playbook -i hosts playbook.yml -s
 ```
