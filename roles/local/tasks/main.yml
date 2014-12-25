@@ -14,7 +14,7 @@
     - htop
 
 - name: Install desktop
-  apt: name=ubuntu-desktop install_recommends=no state=installed
+  apt: name=ubuntu-desktop install_recommends=yes state=installed
 
 - name: add ST3 repo
   apt_repository: > 
